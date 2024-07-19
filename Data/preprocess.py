@@ -15,10 +15,11 @@ df = pd.read_csv(file_path)
 
 # 필요한 컬럼들
 columns_to_embed = [
-    '명칭', '우편번호', '관리자', '전화번호', '주소', '위도', '경도', '개요', '부대 시설', '상세정보'
+    '명칭', '전화번호', '주소', '개요', '상세정보'
 ]
 
 df = df[columns_to_embed]
+df = df.head(100)
 
 output_file_path = 'Data/preprocessed_dataset.csv'
 df.to_csv(output_file_path, index=False)
