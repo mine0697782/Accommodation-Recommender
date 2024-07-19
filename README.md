@@ -4,5 +4,4 @@ LangChain을 사용해 사용자의 취향과 요구 사항을 분석하여 최�
 ## 사용 기술
 LangChain
 streamlit
-etc.
 ...
