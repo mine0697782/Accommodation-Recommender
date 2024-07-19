@@ -1,16 +1,15 @@
 import streamlit as st
 import re
 import sqlite3
+
 # Main title
 st.title("숙박추천 서비스")
 
 with st.container():
     prompt = st.text_input("GPT에게 요청하세요~", key='prompt')
 
-
 # Define the layout
 col1, col2 = st.columns([2, 5])
-
 
 def load_data():
     db = sqlite3.connect('')
@@ -20,37 +19,30 @@ def load_data():
     db.close()
     return [row[0] for row in rows]
 
-
 def list_load():
-    lsts = [st.session_state['selected_regions'],
-            st.session_state['selected_roomOption'],
-            st.session_state['selected_amenities'],
-            st.session_state['price'],
-            st.session_state['MaxNum'],
-            st.session_state['checkin_times'],
-            st.session_state['pickup_service'],
-            st.session_state['prompt'],]
+    accommodations = [
+        ["웰리힐리파크", "강원특별자치도 횡성군 둔내면 고원로 451", "", "", "15:00", "익일 11:00"],
+        ["코레스코치악산콘도미니엄", "강원특별자치도 횡성군 우천면 전재로 254", "033-342-7880", "", "15:00", "익일 11:00"],
+        ["호텔 느낌", "강원특별자치도 속초시 온천로 313", "033-635-2580", "", "15:00", "14:00"],
+        ["관광펜션 시실리(평창시실리펜션)", "강원특별자치도 평창군 진부면 탑동길 195-8", "010-4364-2655", "", "15:00", "11:00"],
+        ["연어의 고향 펜션", "강원특별자치도 양양군 양양읍 동해신묘길 8-3", "033-672-6809", "", "15:00", "익일 11:00"],
+        ["키스멧코티지", "강원특별자치도 평창군 용평면 금당길 213-20", "", "", "15:00", "11:00"]
+    ]
+    
     with col2:
-        # rooms = load_data()
-        # if rooms:
-        #     for room in rooms:
-        #         with st.container(border=True):
-        #             st.write(f"room")
-        for lst in lsts:
-            with st.container(border=True):
-                st.write(f"{lst}")
-                # st.write(f"""
-                #         지역: {regions}\n
-                #         제공 물품: {roomOption}\n
-                #         부대시설 {selected_amenities}\n
-                #         체크인 시간: {checkin_times}\n
-                #         픽업 유무: {pickup_service}\n
-                #         가격: {price}\n
-                #         숙박 인원수: {MaxNum}\n
-                #         """)
-
-    return
-
+        for accommodation in accommodations:
+            st.markdown(
+                f"""
+                <div style="border: 1px solid black; padding: 10px; margin-top: 20px;  border-radius: 5px;">
+                    <strong>이름</strong>: {accommodation[0]}<br>
+                    <strong>주소</strong>: {accommodation[1]}<br>
+                    <strong>전화번호</strong>: {accommodation[2]}<br>
+                    <strong>체크인 시간</strong>: {accommodation[4]}<br>
+                    <strong>체크아웃 시간</strong>: {accommodation[5]}
+                </div>
+                """,
+                unsafe_allow_html=True
+             )
 
 def reset_state():
     st.session_state['selected_regions'] = []
@@ -62,19 +54,16 @@ def reset_state():
     st.session_state['pickup_service'] = '상관없음'
     st.session_state['prompt'] = ''
 
-
 @st.experimental_fragment
 def search():
     if st.button("검색"):
         list_load()
-
 
 @st.experimental_fragment
 def reSet():
     if st.button("초기화"):
         reset_state()
         st.rerun()
-
 
 with col1:
     reSet()
@@ -119,7 +108,6 @@ with col1:
         "픽업 서비스 여부", ["상관없음", "유", "무"], key='pickup_service')
 
     search()
-
 
 with col2:
     st.markdown("## 검색결과")
