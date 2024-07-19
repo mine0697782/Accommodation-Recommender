@@ -27,7 +27,7 @@ def ask_something(chain, query):
     print(f"LLM : {chain_output}")
 
 
-    return
+    return chain_output
 
 def load_csv(file_path):
     df = pd.read_csv(file_path)
@@ -150,6 +150,25 @@ def init_chain(retriever):
     save_context_runnable = RunnableLambda(save_context)
     rag_chain_with_history = load_context_runnable | rag_chain | save_context_runnable
     return rag_chain_with_history
+
+def call_model(query):
+    load_dotenv()
+
+    csv_filepath = "/Users/jmj/Accommodation-Recommender/Data/preprocessed_dataset.csv"
+    documents = load_csv(csv_filepath)
+    
+    retriever = init_retriever(documents)
+
+    tool = create_retriever_tool(
+        retriever,
+        "retriever_indexing",
+        "Indexing, Embedding, and comparing doc similarity"
+    )
+
+    tools = [tool]
+    agent_chain = init_agent(tools)
+
+    return ask_something(agent_chain, query)
 
 if __name__ == "__main__":
     load_dotenv()
